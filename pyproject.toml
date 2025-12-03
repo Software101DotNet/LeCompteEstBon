@@ -1,0 +1,7 @@
+[project]
+name = "countdown"
+version = "0.1.0"
+description = "Solves every combination of the numbers game in the TV quiz show Count Down (UK), also known as Letters and Numbers in Australia
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
