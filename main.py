@@ -17,7 +17,6 @@
 
 def SetOfAllSixNumberCombinations():
 	from itertools import combinations
-	#numbers = [100, 75, 50, 25, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
 	numbers = [100, 75, 50, 25, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]  # Game drawn from 2 sets of single digit numbers
 	return list(combinations(numbers, 6))
 
@@ -106,9 +105,13 @@ def main():
     print(f"Number of possible soutions for game {len(possibleSolutions):,}")
 
     print ("\nList of possible solutions:")
-    solution =  PossibleGameSolutions([100, 25, 8, 5, 2])
-for index, value in enumerate(sorted(solution)):
-    print(f"{index:5d}  {value}")
+    solution =  PossibleGameSolutions([50, 4, 6, 9, 3, 8])
+
+    targetValue = 532
+
+    for index, value in enumerate(sorted(solution)):
+        solutionResult=0 #eval(value)
+        print(f"{index:5d}  {value} = {solutionResult}")
 
 
 
