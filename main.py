@@ -95,22 +95,14 @@ def PossibleGameSolutions(numbers):
 
 def main():
 
-    gameSet = SetOfAllSixNumberCombinations()
-    print(f"Number of possible game combinations: {len(gameSet):,}")
-
-    GameNumberSet = GameSolutionsPermutations(gameSet[0])
-    print(f"Number of possible solutions for game combination {len(GameNumberSet):,}")
-
-    possibleSolutions = PossibleGameSolutions(GameNumberSet)
-    print(f"Number of possible soutions for game {len(possibleSolutions):,}")
-
-    print ("\nList of possible solutions:")
-    solution =  PossibleGameSolutions([50, 4, 6, 9, 3, 8])
-
+    numberSet = [50, 4, 6, 9, 3, 8]
     targetValue = 532
+    print (f"\nCalculating possible solutions for {targetValue} using number {numberSet}:\n")
+    solution =  PossibleGameSolutions(numberSet)
 
+    print("Evaluating possible solutions...\n")
     for index, value in enumerate(sorted(solution)):
-        solutionResult=0 #eval(value)
+        solutionResult=eval(value)
         print(f"{index:5d}  {value} = {solutionResult}")
 
 
