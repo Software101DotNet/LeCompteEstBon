@@ -35,7 +35,8 @@ def GameSolutionsPermutations(gameSet):
 
     return allPermutations
 
-     
+
+
 from itertools import permutations, combinations
 
 def PossibleGameSolutions(numbers):
@@ -97,10 +98,10 @@ def main():
 
     numberSet = [50, 4, 6, 9, 3, 8]
     targetValue = 532
-    print (f"\nCalculating possible solutions for {targetValue} using number {numberSet}:\n")
+    print (f"\nCalculating possible solutions for {targetValue} using the set of numbers {numberSet}:\n")
     solution =  PossibleGameSolutions(numberSet)
 
-    print("Evaluating possible solutions...\n")
+    print(f"Evaluating {len(solution)} possible solutions...\n")
     for index, value in enumerate(sorted(solution)):
         solutionResult=eval(value)
         print(f"{index:5d}  {value} = {solutionResult}")
