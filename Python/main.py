@@ -17,7 +17,7 @@
 
 def SetOfAllSixNumberCombinations():
 	from itertools import combinations
-	numbers = [100, 75, 50, 25, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]  # Game drawn from 2 sets of single digit numbers
+	numbers = [100, 75, 50, 25, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]  # Game drawn from 2 sets of single digit numbers and a set of four larger numbers
 	return list(combinations(numbers, 6))
 
 
