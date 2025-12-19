@@ -23,7 +23,7 @@ def SetOfAllSixNumberCombinations():
 
 
 # for a given game of 6 numbers, return the complete set of all the possible sequences that can be made from the 6 number numbers
-def GenerateCombinationSet(gameSet):
+def GenerateNumberCombinationSet(gameSet):
     from itertools import permutations
 
     allPermutations=list()
@@ -34,6 +34,7 @@ def GenerateCombinationSet(gameSet):
             allPermutations.append(number)
 
     return allPermutations
+
 
 def GenerateFormulaSet(numberSet):
     from itertools import product, permutations
@@ -58,19 +59,21 @@ def GenerateFormulaSet(numberSet):
 
     return formulaSet
 
-def get_evaluated_solutions(solutions):
+
+def EvaluateFormulaSet(solutions):
     evaluated = []
     for value in solutions:
         result = eval(value)
         # rounding error at 945925: 6/5/3*1*4-2 = -0.40000000000000013, so filter to 4 decimal places
-        result = round(result, 4)
+        #result = round(result, 4)
 
         # limit the results to integer values only
-        if result.is_integer():
-            result = int(result)
-            evaluated.append((value, result))
-            
+        #if result.is_integer():
+        #    result = int(result)
+        evaluated.append((value, result))
+
     return evaluated
+
 
 # calculate a histogram of results
 def calculate_histogram(evaluated_solutions):
@@ -81,28 +84,57 @@ def calculate_histogram(evaluated_solutions):
         histogram[result] += 1
     return histogram
 
+import sys
+import logging
+
 def main():
 
-    numberSet = [1,2,3,4,5,6]   #['a','b','c','d','e','f']
+    # Configure logging with a timestamp (%(asctime)s)
+    logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S',level=logging.ERROR)
+    verbose = False
+
+    targetSet = [50,4,6,9,3,8]
     targetValue = 532
 
-    print (f"\nCalculating set of allpossible number combinations from the set of numbers {numberSet}:\n")
-    solution =  GenerateCombinationSet(numberSet)
-    print (f"Total possible number combinations: {len(solution)}\n")
+    print (f"Generating the set of all possible formulas combinations from the number set {targetSet}")
+    formulaSet = sorted(GenerateFormulaSet(targetSet), key=lambda s: (len(s), s.lower()))
 
-    for idx, s in enumerate(solution):
-        print(f"{1+idx:5d}: ", end='')
-        for e in s:
-            print(e, end=' ')
+    if verbose:
+        print (f"Formula set size is {len(formulaSet)} :")
+        for idx, s in enumerate(formulaSet):
+            print(f"{1+idx:5d}: {s}")
         print()
 
-    formulaSet = sorted(GenerateFormulaSet(numberSet), key=lambda s: (len(s), s.lower()))
-    print (f"\nTotal possible formulas from the set of numbers {numberSet}: {len(formulaSet)}\n")
+    print (f"Evaluating formula set ...", end="")
+    sys.stdout.flush()
+    evaluatedFormulaSet = EvaluateFormulaSet(formulaSet)
+    print(f" Evaluation of {len(evaluatedFormulaSet)} formulas completed.")
 
-    evaluated_solutions = get_evaluated_solutions(formulaSet)
+    if verbose:
+        for idx, (expr, result) in enumerate(evaluatedFormulaSet):
+            print(f"{1+idx:5d}: {expr} = {result}")
+        
+    min=0
+    max=0
+    closestDiff=sys.maxsize
+    hitCount=0
+    for idx, (expr, result) in enumerate(evaluatedFormulaSet):
+        if min>result:
+            min=result
+        if max<result:
+            max=result
+        if result == targetValue:
+            hitCount += 1
+        else:
+            diff = abs(targetValue - result)
+            if diff<closestDiff:
+                closestDiff=diff
+                closestSolution=(expr, result)
 
-    for idx, (expr, result) in enumerate(evaluated_solutions):
-        print(f"{1+idx:5d}: {expr} = {result}")
+    if hitCount==0:
+        print (f"Found {hitCount} solutions for the target value {targetValue}, closest solution was {closestSolution} with a difference of {closestDiff} from target") 
+    else:
+        print (f"Found {hitCount} solutions for the target value {targetValue}")   
 
 
 if __name__ == "__main__":
