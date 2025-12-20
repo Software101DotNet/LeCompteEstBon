@@ -132,25 +132,16 @@ def AnalysisTargetSet(evaluatedFormulaSet):
     print (f"Hit count max: {hitCountMax}, min: {hitCountMin}")
 
 
-import sys
-import re
-import argparse
-
-def main():
-    
+# process the command line arguments
+def ProcessCLI():
     parser = argparse.ArgumentParser(
-        description="Find solutions to reach a target value using a set of numbers"
+        description="Generates formula that equates to the given target value from the given set of six values. Based on the 'Le Compte Est Bon' numbers game.",
     )
     parser.add_argument(
         "numbers",
-        nargs="+",
+        nargs=7,
         type=int,
-        help="Set of six numbers to use in formula"
-    )
-    parser.add_argument(
-        "target",
-        type=int,
-        help="Target value to reach in the range of 100 to 999"
+        help="First six numbers to use in formula, followed by the target value"
     )
     
     try:
@@ -158,8 +149,21 @@ def main():
     except SystemExit:
         return
     
-    targetSet = args.numbers
-    targetValue = args.target
+    return args
+
+
+import sys
+import re
+import argparse
+
+def main():
+    
+    cli = ProcessCLI()
+    if cli is None:
+        return
+    
+    targetSet = cli.numbers[:6]
+    targetValue = cli.numbers[6]
     
     verbose = True
 
@@ -185,6 +189,7 @@ def main():
     for index, solution in sorted(enumerate(solutions), key=lambda x: CountFormulaElements(x[1])):
         print (f"Solution {1+index:<4d} : {solution}")
     print()
+
 
 
 if __name__ == "__main__":

@@ -28,9 +28,14 @@ Give the program the target number (in the TV game this is a randomlly sellected
 
 ## About The Implementation
 
-There are two implementations of the same program. The first version was implemented in Python and the source code is in the subfolder Python. The program was then rewritten in C# for .NET because the Python version took more than 30 seconds to execute. This would be kind of pointless if playing along with the TV show.
+This is the first implementation of the program, which uses the BODMAS rule, with the limitation that it can only find all the solutions that do not require parentheses in the formula. So it's ODMAS rules, with the B to be implemented in the following version. 
 
-Both the Python and C# versions can be run on macOS, Linux, and Windows; however, the Python version takes 9 hours to execute on Apple M4, whereas the C# version constructs and solves the equation combinations in a fraction of the time.
+An example, given the number set [9,7,2,4,9,25] and the target value of 667, This version will find the solutions such as 9*9*7+4*25=667, but it will not find the other solutions of the form ((9*4)-7)*(25-2)=667 as this requires parathasis.
+
+The following implementation will also consider parathasis ( ) and will consequently find the complete set of possible solutions of a given number set to reach a given target number.
+
+
+
 
 
 
