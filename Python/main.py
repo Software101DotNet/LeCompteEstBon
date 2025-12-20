@@ -134,17 +134,33 @@ def AnalysisTargetSet(evaluatedFormulaSet):
 
 import sys
 import re
+import argparse
 
 def main():
-
-    # solutions for the number set [9,7,2,4,9,25] to reach the target value 667
-    # known solutions:
-    # ((9*4)-7)*(25-2)=667 this solution is only found with an exhaustive search including parentheses
-    # 9*9*7+4*25=667
-
-    targetSet = [9,7,2,4,9,25]
-    targetValue = 667
-
+    
+    parser = argparse.ArgumentParser(
+        description="Find solutions to reach a target value using a set of numbers"
+    )
+    parser.add_argument(
+        "numbers",
+        nargs="+",
+        type=int,
+        help="Set of six numbers to use in formula"
+    )
+    parser.add_argument(
+        "target",
+        type=int,
+        help="Target value to reach in the range of 100 to 999"
+    )
+    
+    try:
+        args = parser.parse_args()
+    except SystemExit:
+        return
+    
+    targetSet = args.numbers
+    targetValue = args.target
+    
     verbose = True
 
     if verbose:
@@ -166,14 +182,9 @@ def main():
     else:
         print (f"Found {solutionCount} solutions for the target value {targetValue}") 
 
-
     for index, solution in sorted(enumerate(solutions), key=lambda x: CountFormulaElements(x[1])):
         print (f"Solution {1+index:<4d} : {solution}")
     print()
-
-    #AnalysisTargetSet(evaluatedFormulaSet)
-
-
 
 
 if __name__ == "__main__":
