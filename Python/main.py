@@ -64,77 +64,116 @@ def EvaluateFormulaSet(solutions):
     evaluated = []
     for value in solutions:
         result = eval(value)
-        # rounding error at 945925: 6/5/3*1*4-2 = -0.40000000000000013, so filter to 4 decimal places
-        #result = round(result, 4)
 
-        # limit the results to integer values only
-        #if result.is_integer():
-        #    result = int(result)
-        evaluated.append((value, result))
+        # limit the results to integer values only, as per the game rules
+        if result.is_integer():
+            result = int(result)
+            evaluated.append((value, result))
 
     return evaluated
 
+# given a formula as a string, return the count of numbers, +, -, * and / in the given formula expression
+def CountFormulaElements(formula):
+    numberCount = 0
+    plusCount = 0
+    minusCount = 0
+    multiplyCount = 0
+    divideCount = 0
 
-# calculate a histogram of results
-def calculate_histogram(evaluated_solutions):
-    histogram = {}
-    for expr, result in evaluated_solutions:
-        if result not in histogram:
-            histogram[result] = 0
-        histogram[result] += 1
-    return histogram
+    numbers = re.findall(r'\d+', formula)
+    numberCount = len(numbers)
+    plusCount = formula.count('+')
+    minusCount = formula.count('-')
+    multiplyCount = formula.count('*')
+    divideCount = formula.count('/')
 
-import sys
-import logging
+    return numberCount, plusCount, minusCount, multiplyCount, divideCount
 
-def main():
 
-    # Configure logging with a timestamp (%(asctime)s)
-    logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S',level=logging.ERROR)
-    verbose = False
+def Analysis(targetValue, evaluatedFormulaSet):
 
-    targetSet = [50,4,6,9,3,8]
-    targetValue = 532
-
-    print (f"Generating the set of all possible formulas combinations from the number set {targetSet}")
-    formulaSet = sorted(GenerateFormulaSet(targetSet), key=lambda s: (len(s), s.lower()))
-
-    if verbose:
-        print (f"Formula set size is {len(formulaSet)} :")
-        for idx, s in enumerate(formulaSet):
-            print(f"{1+idx:5d}: {s}")
-        print()
-
-    print (f"Evaluating formula set ...", end="")
-    sys.stdout.flush()
-    evaluatedFormulaSet = EvaluateFormulaSet(formulaSet)
-    print(f" Evaluation of {len(evaluatedFormulaSet)} formulas completed.")
-
-    if verbose:
-        for idx, (expr, result) in enumerate(evaluatedFormulaSet):
-            print(f"{1+idx:5d}: {expr} = {result}")
-        
-    min=0
-    max=0
     closestDiff=sys.maxsize
     hitCount=0
+
+    solutions=list()
+
     for idx, (expr, result) in enumerate(evaluatedFormulaSet):
-        if min>result:
-            min=result
-        if max<result:
-            max=result
         if result == targetValue:
             hitCount += 1
+            closestDiff=0
+            closestSolution=(expr, result)
+            solutions.append(expr)
         else:
+            if closestDiff==0:
+                continue
             diff = abs(targetValue - result)
             if diff<closestDiff:
                 closestDiff=diff
                 closestSolution=(expr, result)
 
-    if hitCount==0:
-        print (f"Found {hitCount} solutions for the target value {targetValue}, closest solution was {closestSolution} with a difference of {closestDiff} from target") 
+    return closestDiff,hitCount,closestSolution,solutions  
+
+def AnalysisTargetSet(evaluatedFormulaSet):
+    hitCountMax=0
+    hitCountMin=sys.maxsize
+    for targetValue in range(1,1000):
+        closestDiff, hitCount, closestSolution, solutions = Analysis(targetValue, evaluatedFormulaSet)
+
+        if hitCount==0:
+            print (f"{hitCount:3d} : {targetValue:4d} ~ {closestSolution} (diff {closestDiff})") 
+        else:
+            print (f"{hitCount:3d} : {targetValue:4d} = {closestSolution}") 
+
+        if hitCount>hitCountMax:
+            hitCountMax=hitCount
+        if hitCount<hitCountMin:
+            hitCountMin=hitCount
+
+    print (f"Hit count max: {hitCountMax}, min: {hitCountMin}")
+
+
+import sys
+import re
+
+def main():
+
+    # solutions for the number set [9,7,2,4,9,25] to reach the target value 667
+    # known solutions:
+    # ((9*4)-7)*(25-2)=667 this solution is only found with an exhaustive search including parentheses
+    # 9*9*7+4*25=667
+
+    targetSet = [9,7,2,4,9,25]
+    targetValue = 667
+
+    verbose = True
+
+    if verbose:
+        print (f"Generating formula combination set from the number set {targetSet} ... ", end="")
+        sys.stdout.flush()
+    
+    formulaSet = sorted(GenerateFormulaSet(targetSet), key=lambda s: (len(s), s.lower()))
+
+    if verbose:
+        print (f"Formula combinations set size that have an integer result: {len(formulaSet)}")
+        print (f"Evaluating formula set ... ", end="")
+        sys.stdout.flush()
+
+    evaluatedFormulaSet = EvaluateFormulaSet(formulaSet)
+
+    closestDiff, solutionCount, closestSolution, solutions = Analysis(targetValue, evaluatedFormulaSet)
+    if solutionCount==0:
+        print (f"Found {solutionCount} solutions for the target value {targetValue}, closest solution was {closestSolution} with a difference of {closestDiff} from target") 
     else:
-        print (f"Found {hitCount} solutions for the target value {targetValue}")   
+        print (f"Found {solutionCount} solutions for the target value {targetValue}") 
+
+
+    for index, solution in sorted(enumerate(solutions), key=lambda x: CountFormulaElements(x[1])):
+        print (f"Solution {1+index:<4d} : {solution}")
+    print()
+
+    #AnalysisTargetSet(evaluatedFormulaSet)
+
+
 
 
 if __name__ == "__main__":
