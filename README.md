@@ -28,9 +28,9 @@ Give the program the target number (in the TV game this is a randomlly sellected
 
 ## About The Implementation
 
-This is the first implementation of the program, which uses the BODMAS rule, with the limitation that it can only find all the solutions that do not require parentheses in the formula. So it's ODMAS rules, with the B to be implemented in the following version. 
+This is the first implementation of the program, which uses the BODMAS rules of mathematical expression evaluation, with the limitation that it can only find all the solutions that do not require parentheses in the formula. i.e. the ODMAS rules have been implemented, with the B to be implemented in the next version. 
 
-An example, given the number set [9,7,2,4,9,25] and the target value of 667, This version will find the solutions such as 9*9*7+4*25=667, but it will not find the other solutions of the form ((9*4)-7)*(25-2)=667 as this requires parathasis.
+An example, given the number set [9,7,2,4,9,25] and the target value of 667, This version will find the solutions such as 9 * 9 * 7 + 4 * 25 = 667, but it will not find the other solution that requires parathasis of the form ((9*4)-7)*(25-2)=667.
 
 The following implementation will also consider parathasis ( ) and will consequently find the complete set of possible solutions of a given number set to reach a given target number.
 

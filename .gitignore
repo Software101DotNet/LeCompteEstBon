@@ -12,3 +12,5 @@ wheels/
 CSharp/bin
 CSharp/obj
 
+# local scratchpad file for recording examples under investigation and testing solutions
+Python/solutions.txt

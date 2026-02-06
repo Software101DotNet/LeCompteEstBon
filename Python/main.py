@@ -1,4 +1,4 @@
-# Copyright (C) 2025 Anthony Ransley
+# Copyright (C) 2025-2026 Anthony Ransley
 # https://github.com/Software101DotNet
 #
 # This program is free software: you can redistribute it and/or modify
